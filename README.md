@@ -1,5 +1,5 @@
 # Web Corpus Construction
-This repository contains code and documentation for supporting the web corpus construction session at UCREL summer school 2016.
+This repository contains code and documentation for supporting the web corpus construction session at the UCREL NLP summer school 2016.
 
 ## Setup guide
 1. Insert UCREL memory stick into the computer.
@@ -40,4 +40,4 @@ Available log levels are:
 
 
 ## Dependencies
-The tools here require a number of python libraries to run.  Whereever possible we have included these in the repository in a virtualenv directory.  We also maintain a list at [dependencies.md](dependencies.md).
+The tools here require a number of python libraries to run.  Wherever possible we have included these in the repository in a virtualenv directory.  We also maintain a list at [dependencies.md](dependencies.md).

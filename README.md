@@ -97,6 +97,3 @@ Take over the data gathered in session 1 and start processing it:
  4. Normalising metadata such as dates and titles from the HTTP headers
  5. Writing to XML/JSON files as a corpus
 
-## To-do list
- 1. SW and AM to set up python on windows, or use a UCREL VM with multiple logins
- 2. PR talk to carla usb sticks if we need to go that route

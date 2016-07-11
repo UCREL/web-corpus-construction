@@ -45,37 +45,3 @@ Available log levels are:
 The tools here require a number of python libraries to run.  Whereever possible we have included these in the repository in a virtualenv directory.  We also maintain a list at [dependencies.md](dependencies.md).
 
 
-## Plan for session 1 "Web scraping theory and methods"
-PR: slides intro to the whole NLP summer school week (10 minutes)
-
-PR: slides theory overview (10-15 minutes) to include:
- * history
- * rationale
- * web as corpus
-
-SW: Around 10 minutes slides and 20 minutes practical for each of the following three steps.
-
- 1. Receive a seed URL list of 100 seed URLs.  Three seed lists will be produced:
-    * Blogs
-    * News articles
-    * Links taken from Twitter corpus
- 2. Visit the URLs manually and look for features that might be complex:
-    * Forms
-    * Logins and restricted access
-    * Dynamic pages
-    * Language
-    * Encodings
-    * Navigation and content areas
-    * Any metadata such as usernames, etc.
- 3. Run the spider over the data:
-    1. Insert the URL list into the input list
-    2. Retrieve a URL at random from the input list and;
-       1. Download the page
-       2. Compare it to the output list and discard if duplicate
-       3. Parse the page using Urllib2 and BeautifulSoup, extract URLs and metadata
-       4. Insert into the output list
-    3. End condition met?  Else go to 2.
- 4. Export data
-
-Here we will have a single output database table containing the data itself, metadata about the download process, and possibly some features extracted from the page (particularly the page `title` and `h1` element contents).
-

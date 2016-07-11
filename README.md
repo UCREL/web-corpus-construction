@@ -79,21 +79,3 @@ SW: Around 10 minutes slides and 20 minutes practical for each of the following 
 
 Here we will have a single output database table containing the data itself, metadata about the download process, and possibly some features extracted from the page (particularly the page `title` and `h1` element contents).
 
-## Plan for session 2 "Web as corpus creation and cleaning"
-SW: 20 minutes for the students to inspect their own data hopefully to discover issues of:
- * encoding 
- * double escaping
-
-PR: slides with overview of research findings (10-15 minutes)
- * cleaneval
-
-PR: practical 5 steps (timing to be decided)
-
-Take over the data gathered in session 1 and start processing it:
-
- 1. SQLite export to a collection of files (if we have not)
- 2. Character set normalisation using python (`__future__`, iconv)
- 3. Boilerplate removal (justext or boilerpipe)
- 4. Normalising metadata such as dates and titles from the HTTP headers
- 5. Writing to XML/JSON files as a corpus
-

@@ -6,7 +6,7 @@ import urllib.error
 from urllib.request import urlopen
 import types
 import logging
-from socket import timeout
+import socket
 
 
 class HTTPClient:
@@ -73,7 +73,7 @@ class HTTPClient:
         except urllib.error.URLError as error:
             self._log.debug('URL error: %s, URL: %s' % (error.reason, url))
             return None, None
-        except timeout as error:
+        except socket.timeout:
             self._log.debug('Timeout error: URL: %s' % url)
             return None, None
 

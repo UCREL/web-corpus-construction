@@ -8,7 +8,7 @@
 #
 from filter         import DuplicateFilter, MinimumLengthFilter, MaximumLengthFilter, URLCountFilter, MetadataRegexpFilter
 from urlfilter      import HTTPURLFilter, PreciseDuplicateURLFilter
-from endcondition   import CorpusSizeEndCondition, RuntimeEndCondition
+from endcondition   import CorpusSizeEndCondition, RuntimeEndCondition, SampleEndCondition
 from fitness        import SimplicityURLRank, SampleURLRank
 
 # ----------------------------------------------------------------
@@ -68,7 +68,8 @@ url_filters         = [                                                         
                       ]
 end_conditions      = [                                                             # End conditions
                        CorpusSizeEndCondition.CorpusSizeEndCondition(100),
-                       RuntimeEndCondition.RuntimeEndCondition(3600)
+                       RuntimeEndCondition.RuntimeEndCondition(3600),
+                       SampleEndCondition.SampleEndCondition()
                       ]
 
 # ----------------------------------------------------------------

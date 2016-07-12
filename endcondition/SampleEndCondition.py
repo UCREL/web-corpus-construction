@@ -6,6 +6,9 @@ class SampleEndCondition(EndCondition):
         EndCondition.__init__(self, "Sample End Condition")
 
     def end(self, corpus_table, body, metadata):
-        '''Returns true if the crawler should stop else false.'''
+        '''Returns true if the crawler should stop else false.
 
-        return True
+        Currently set to False to allow the crawler to run.
+        '''
+
+        return False

@@ -9,7 +9,7 @@
 from filter         import DuplicateFilter, MinimumLengthFilter, MaximumLengthFilter, URLCountFilter, MetadataRegexpFilter
 from urlfilter      import HTTPURLFilter, PreciseDuplicateURLFilter
 from endcondition   import CorpusSizeEndCondition, RuntimeEndCondition
-from fitness        import SimplicityURLRank
+from fitness        import SimplicityURLRank, SampleURLRank
 
 # ----------------------------------------------------------------
 # Modules required for basic functionality
@@ -51,7 +51,9 @@ log = logging.getLogger('main')
 corpus_table        = CorpusTable.CorpusTable(args.dbdir)                           # Storage layer
 spider              = HTTPClient.HTTPClient()                                       # Retrieval code
 feature_extractor   = Features.Features(['title', 'h1'])                            # Feature extractor
-url_rank_function   = SimplicityURLRank.SimplicityURLRank()                         # URL fitness function
+url_rank_function   = {'simple' : SimplicityURLRank.SimplicityURLRank(),            # URL fitness function
+                       'sample' : SampleURLRank.SampleURLRank()
+                      }
 page_filters        = [                                                             # Filters for page rejection
                        #FuzzyDuplicateFilter.FuzzyDuplicateFilter(corpus_table),
                        DuplicateFilter.DuplicateFilter(corpus_table),
@@ -66,7 +68,7 @@ url_filters         = [                                                         
                       ]
 end_conditions      = [                                                             # End conditions
                        CorpusSizeEndCondition.CorpusSizeEndCondition(100),
-                       RuntimeEndCondition.RuntimeEndCondition(3600) 
+                       RuntimeEndCondition.RuntimeEndCondition(3600)
                       ]
 
 # ----------------------------------------------------------------
@@ -77,14 +79,14 @@ if args.list is not None:
     with open(args.list) as f:
         for line in f:
             url = line.rstrip()
-            corpus_table.insert_url(url, url_rank_function.goodness(url))
+            corpus_table.insert_url(url, url_rank_function['simple'].goodness(url))
 
 # ----------------------------------------------------------------
 # Main crawling loop
 #
 cont = True
 while cont:
-    
+
     # ------------------------------------------------------------
     # Summarise the state in the logs, and update counters
     #
@@ -107,7 +109,7 @@ while cont:
     url, url_id, goodness, depth = corpus_table.best_url()
     log.info("URL chosen -- goodness: %s, depth: %s" % (goodness, depth))
     corpus_table.update_url(url_id)
-    
+
 
     # ------------------------------------------------------------
     # Make a HTTP request for the page and contents
@@ -158,8 +160,8 @@ while cont:
     log.info("Inserting %i URLs" % len(metadata['urls']))
     urls = metadata.pop('urls')
     for url in urls:
-        corpus_table.insert_url(url, url_rank_function.goodness(url), depth + 1)
-    
+        corpus_table.insert_url(url, url_rank_function['simple'].goodness(url), depth + 1)
+
 
     # ------------------------------------------------------------
     # Insert page data into DB and onto disk
@@ -167,7 +169,7 @@ while cont:
     metadata['url_id'] = url_id
     corpus_table.insert_page(metadata, body)
 
-    
+
     # ------------------------------------------------------------
     # Test for end conditions
     end = False
@@ -185,4 +187,3 @@ corpus_table.disconnect
 
 # Tell people we didn't crash
 log.info("Done.  Exiting under normal circumstances.")
-

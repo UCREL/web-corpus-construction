@@ -6,7 +6,7 @@ import urllib.error
 from urllib.request import urlopen
 import types
 import logging
-from socket import timeout
+import socket
 
 
 class HTTPClient:
@@ -29,15 +29,15 @@ class HTTPClient:
         while(size < self.max_filesize):
             chunk = response.read(chunk_size)
             body += chunk
-            
+
             if not chunk:
-                return body 
-            
+                return body
+
             size += len(chunk)
             self._log.debug("Read %s bytes (max: %s)" % (size, self.max_filesize))
 
         self._log.error("File is too long (read %s bytes of %s)" % (size, self.max_filesize))
-        return None 
+        return None
 
 
 
@@ -56,7 +56,7 @@ class HTTPClient:
         try:
             # Start HTTP request
             page = urlopen(url, timeout=timeout)
-    
+
             # Check content type BEFORE requesting the whole page
             if self.content_type_rx:
                 content_type = page.info()['Content-Type']
@@ -73,9 +73,8 @@ class HTTPClient:
         except urllib.error.URLError as error:
             self._log.debug('URL error: %s, URL: %s' % (error.reason, url))
             return None, None
+        except socket.timeout as error:
+            self._log.debug('Timeout error: URL: %s' % url)
+            return None, None
 
         return page, body
-
-
-
-

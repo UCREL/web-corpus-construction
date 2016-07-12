@@ -4,9 +4,8 @@ This repository contains code and documentation for supporting the web corpus co
 ## Setup guide
 1. Insert UCREL memory stick into the computer.
 2. Go to Removable Disk E in the file explorer.
-3. Go to web-corpus-construction folder.
-4. __Shift and right click__ on a blank part of the file explorer and from the menu click open command window here.
-5. Python is at the following: ..\..\python\python.exe
+3. __Shift and right click__ on a blank part of the file explorer and from the menu click open command window here.
+4. Python is within the python folder under python.exe.
 
 
 ## Use

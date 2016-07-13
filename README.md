@@ -39,4 +39,4 @@ Available log levels are:
 
 
 ## Dependencies
-The tools here require a number of python libraries to run.  Wherever possible we have included these in the repository in a virtualenv directory.  We also maintain a list at [dependencies.md](dependencies.md).
+The tools here require a number of python libraries to run. We maintain a list at [dependencies.md](dependencies.md).

@@ -9,7 +9,7 @@ This repository contains code and documentation for supporting the web corpus co
 
 
 ## Use
-Run `python spider.py -h` to see the help text:
+Run `..\..\python\python.exe spider.py -h` to see the help text:
 
     usage: spider.py [-h] [-seeds LIST] [-db DBDIR] [-loglevel LOGLEVEL]
 

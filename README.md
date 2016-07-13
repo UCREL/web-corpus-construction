@@ -1,6 +1,11 @@
 # Web Corpus Construction
 This repository contains code and documentation for supporting the web corpus construction session at the UCREL NLP summer school 2016.
 
+## Slides that support the code
+### Introduction slides
+
+### [Main presentation slides](https://docs.google.com/presentation/d/1X_iXo3jNbvkPNE5PPlilGopsoylgd9xnZxOqk44JpsM/edit?usp=sharing)
+
 ## Setup guide
 1. Insert UCREL memory stick into the computer.
 2. Go to Removable Disk E in the file explorer.

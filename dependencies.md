@@ -1,5 +1,6 @@
 # Dependencies
 
+ * Python > 3.4
  * beautifulsoup
 
 ## Install Process

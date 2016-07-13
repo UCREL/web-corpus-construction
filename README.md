@@ -2,7 +2,7 @@
 This repository contains code and documentation for supporting the web corpus construction session at the UCREL NLP summer school 2016.
 
 ## Slides that support the code
-### Introduction slides
+### [Introduction slides](slides/UCREL_NLP_S1_Web_Scraping_Intro.pdf)
 
 ### [Main presentation slides](https://docs.google.com/presentation/d/1X_iXo3jNbvkPNE5PPlilGopsoylgd9xnZxOqk44JpsM/edit?usp=sharing)
 

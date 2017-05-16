@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
-# Standard modules
+import hashlib
+import logging
 import sqlite3 as lite
 import os.path
 import sys
 
-# Non-standard modules
-import code
-import hashlib
-import logging
+
+
 
 class CorpusTable:
     '''Object that stores all the content from a web page.
@@ -37,7 +36,7 @@ class CorpusTable:
         # Create dir if not in existence
         self._log = logging.getLogger('storage')
 
-        self._log.info("Using output database at %s" % dirname)
+        self._log.info("Using output database at %s", dirname)
         os.makedirs(dirname, exist_ok=True)
 
         # Connect to/create a database file
@@ -46,14 +45,14 @@ class CorpusTable:
         self._con.text_factory = lambda x: str(x, "utf-8", "ignore")
         self._cursor          = self._con.cursor()
         if new_db:
-            self._log.info("Metadata DB does not exist.  Creating now at %s" % self.filename)
+            self._log.info("Metadata DB does not exist.  Creating now at %s", self.filename)
             for command in CorpusTable.schema:
                 self.execute(command)
 
     def execute(self, sql, data = None, get_rowid = False):
         '''Execute a single transaction with the SQL given, and return the result.'''
 
-        self._log.debug("SQL: %s" % sql)
+        self._log.debug("SQL: %s", sql)
         c = self._con.cursor()
         if data:
             c = c.execute(sql, data)
@@ -77,20 +76,20 @@ class CorpusTable:
         hsh = hashlib.sha1(url.encode('utf-8')).hexdigest()
         row = self.execute("insert into `urls` (url, goodness, depth, hash, downloaded) values (?, ?, ?, ?, ?);",
                      [url, goodness, depth, hsh, 0], get_rowid=True)
-        self._log.debug("URL inserted as ID %s with goodness %s: %s" % (row, goodness, url))
+        self._log.debug("URL inserted as ID %s with goodness %s: %s", row, goodness, url)
 
 
     def best_url(self, downloaded = False):
         '''Return a random URL from the urls table'''
         c = self.execute("select url, id, goodness, depth from urls where downloaded = ? order by goodness DESC limit 1;",
-                [1 if downloaded else 0]);
+                         [1 if downloaded else 0]);
         return c.fetchone()
 
 
     def url_count(self, downloaded = False):
         ''' Return the number of URLs downloaded or pending. '''
         c = self.execute("select count(*) from `urls` where downloaded = ?;",
-                     [1 if downloaded else 0]);
+                         [1 if downloaded else 0]);
         return c.fetchone()[0]
 
     def update_url(self, url_id):

@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+# ----------------------------------------------------------------
+# Modules required for basic functionality
+import argparse
+import logging
+import os
+import sys
+
+import HTTPClient
+import CorpusTable
+import Features
 
 # ----------------------------------------------------------------
 # Pluggable module imports
@@ -10,16 +20,6 @@ from filter         import DuplicateFilter, MinimumLengthFilter, MaximumLengthFi
 from urlfilter      import HTTPURLFilter, PreciseDuplicateURLFilter
 from endcondition   import CorpusSizeEndCondition, RuntimeEndCondition, SampleEndCondition
 from fitness        import SimplicityURLRank, SampleURLRank
-
-# ----------------------------------------------------------------
-# Modules required for basic functionality
-import os, sys
-import logging
-import argparse
-
-import HTTPClient
-import CorpusTable
-import Features
 
 # ----------------------------------------------------------------
 # Parse command-line arguments

@@ -180,9 +180,8 @@ while cont:
 
     # ------------------------------------------------------------
     # Test for end conditions
-    end = False
     for e in end_conditions:
-        end = end & e.end(corpus_table, body, metadata)
+        end = e.end(corpus_table, body, metadata)
         log.info("End by condition '%s'? %s" % (e.name, end))
         if end:
             log.info("End condition reached.  Quitting...")

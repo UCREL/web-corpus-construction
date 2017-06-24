@@ -11,8 +11,10 @@ from bs4 import BeautifulSoup, SoupStrainer
 
 class Features:
 
-    def __init__(self, tags=[]):
+    def __init__(self, url_normaliser, tags=[]):
         self._log = logging.getLogger('features')
+
+        self.url_normaliser = url_normaliser
 
         self.tags = {}
         for tag in tags:
@@ -39,9 +41,13 @@ class Features:
                 self._log.debug("Converting relative URL to absolute: %s -> %s" % (href, abs_href))
                 href = abs_href
 
+            # Normalise string
+            href_norm = self.url_normaliser.normalise(href)
+            self._log.debug("Normalised URL: %s -> %s" % (href, href_norm))
+
             # Add to the list
-            self._log.debug("Adding URL to candidate list: %s" % href)
-            urls.append(href)
+            self._log.debug("Adding URL to candidate list: %s" % href_norm)
+            urls.append(href_norm)
 
 
         return urls

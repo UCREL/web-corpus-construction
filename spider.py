@@ -6,10 +6,13 @@ import argparse
 import logging
 import os
 import sys
+from functools import reduce
+import operator
 
 import HTTPClient
 import CorpusTable
 import Features
+import Normalisation
 
 # ----------------------------------------------------------------
 # Pluggable module imports
@@ -50,7 +53,8 @@ log = logging.getLogger('main')
 #
 corpus_table        = CorpusTable.CorpusTable(args.dbdir)                           # Storage layer
 spider              = HTTPClient.HTTPClient()                                       # Retrieval code
-feature_extractor   = Features.Features(['title', 'h1'])                            # Feature extractor
+url_normaliser      = Normalisation.URLNormaliser()                                 # URL normaliser
+feature_extractor   = Features.Features(url_normaliser, ['title', 'h1'])            # Feature extractor
 url_rank_function   = {'simple' : SimplicityURLRank.SimplicityURLRank(),            # URL fitness function
                        'sample' : SampleURLRank.SampleURLRank()
                       }
@@ -79,8 +83,11 @@ if args.list is not None:
     log.info("Reading seed URLs from %s" % args.list)
     with open(args.list) as f:
         for line in f:
-            url = line.rstrip()
-            corpus_table.insert_url(url, url_rank_function['simple'].goodness(url))
+            url = url_normaliser.normalise(line.rstrip())
+            accepted = [f.accept(url) for f in url_filters]
+            log.debug("%s out of %s URL filters accepted the URL" % (sum(accepted), len(url_filters)))
+            if sum(accepted) == len(url_filters):
+                corpus_table.insert_url(url, url_rank_function['simple'].goodness(url))
 
 # ----------------------------------------------------------------
 # Main crawling loop

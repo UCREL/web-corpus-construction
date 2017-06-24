@@ -15,7 +15,4 @@ class PreciseDuplicateURLFilter(URLFilter):
         Rejects URLs if they already exist in the database'''
 
         urls = self.corpus_table.find_url('url', url)
-        return len(urls.fetchall()) > 0
-
-
-
+        return len(urls.fetchall()) == 0

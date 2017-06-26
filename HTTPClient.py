@@ -4,6 +4,7 @@
 import logging
 import urllib.error
 from urllib.request import urlopen
+import http.client
 import types
 import logging
 import socket
@@ -66,7 +67,9 @@ class HTTPClient:
 
             # Read page data up until the max size
             body = self.incremental_read(page)
-
+        except http.client.RemoteDisconnected as error:
+            self._log.debug('Remote endpoint disconnected: URL: %s' % url)
+            return None, None
         except urllib.error.HTTPError as error:
             self._log.error('HTTP code %d : %s, URL: %s' % (error.code, error.reason, url))
             return None, None

@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+# ----------------------------------------------------------------
+# Modules required for basic functionality
+import argparse
+import logging
+import os
+import sys
+from functools import reduce
+import operator
+
+import HTTPClient
+import CorpusTable
+import Features
+import Normalisation
 
 # ----------------------------------------------------------------
 # Pluggable module imports
@@ -9,17 +22,7 @@
 from filter         import DuplicateFilter, MinimumLengthFilter, MaximumLengthFilter, URLCountFilter, MetadataRegexpFilter
 from urlfilter      import HTTPURLFilter, PreciseDuplicateURLFilter
 from endcondition   import CorpusSizeEndCondition, RuntimeEndCondition, SampleEndCondition
-from fitness        import SimplicityURLRank, SampleURLRank
-
-# ----------------------------------------------------------------
-# Modules required for basic functionality
-import os, sys
-import logging
-import argparse
-
-import HTTPClient
-import CorpusTable
-import Features
+from fitness        import SimplicityURLRank, SampleURLRank, HumanReadableURLRank
 
 # ----------------------------------------------------------------
 # Parse command-line arguments
@@ -50,17 +53,19 @@ log = logging.getLogger('main')
 #
 corpus_table        = CorpusTable.CorpusTable(args.dbdir)                           # Storage layer
 spider              = HTTPClient.HTTPClient()                                       # Retrieval code
-feature_extractor   = Features.Features(['title', 'h1'])                            # Feature extractor
-url_rank_function   = {'simple' : SimplicityURLRank.SimplicityURLRank(),            # URL fitness function
-                       'sample' : SampleURLRank.SampleURLRank()
-                      }
+url_normaliser      = Normalisation.URLNormaliser()                                 # URL normaliser
+feature_extractor   = Features.Features(url_normaliser, ['title', 'h1'])            # Feature extractor
+# URL Fitness Function
+#url_rank_function   = SimplicityURLRank.SimplicityURLRank()                         # Prefer simple URLs
+#url_rank_function   = SampleURLRank.SampleURLRank()                                 # Sample code
+url_rank_function   = HumanReadableURLRank.HumanReadableURLRank()                   # Prefer human-readable URLs
 page_filters        = [                                                             # Filters for page rejection
-                       #FuzzyDuplicateFilter.FuzzyDuplicateFilter(corpus_table),
-                       DuplicateFilter.DuplicateFilter(corpus_table),
-                       MinimumLengthFilter.MinimumLengthFilter(100),
-                       MaximumLengthFilter.MaximumLengthFilter(800000),
-                       URLCountFilter.URLCountFilter(0, 1000),
-                       MetadataRegexpFilter.MetadataRegexpFilter('content_type', 'text\/(x?html|plain)'),
+                       # FuzzyDuplicateFilter.FuzzyDuplicateFilter(corpus_table),   # Fuzzy hash using ssdeep
+                       DuplicateFilter.DuplicateFilter(corpus_table),               # Perfect duplicate checker
+                       MinimumLengthFilter.MinimumLengthFilter(100),                # Min length
+                       MaximumLengthFilter.MaximumLengthFilter(800000),             # Max length
+                       URLCountFilter.URLCountFilter(0, 1000),                      # URL count
+                       MetadataRegexpFilter.MetadataRegexpFilter('content_type', 'text\/(x?html|plain)'),   # Content type
                       ]
 url_filters         = [                                                             # Filters for URL rejection
                        HTTPURLFilter.HTTPURLFilter(),
@@ -79,8 +84,11 @@ if args.list is not None:
     log.info("Reading seed URLs from %s" % args.list)
     with open(args.list) as f:
         for line in f:
-            url = line.rstrip()
-            corpus_table.insert_url(url, url_rank_function['simple'].goodness(url))
+            url = url_normaliser.normalise(line.rstrip())
+            accepted = [f.accept(url) for f in url_filters]
+            log.debug("%s out of %s URL filters accepted the URL" % (sum(accepted), len(url_filters)))
+            if sum(accepted) == len(url_filters):
+                corpus_table.insert_url(url, url_rank_function.goodness(url))
 
 # ----------------------------------------------------------------
 # Main crawling loop
@@ -161,7 +169,7 @@ while cont:
     log.info("Inserting %i URLs" % len(metadata['urls']))
     urls = metadata.pop('urls')
     for url in urls:
-        corpus_table.insert_url(url, url_rank_function['simple'].goodness(url), depth + 1)
+        corpus_table.insert_url(url, url_rank_function.goodness(url), depth + 1)
 
 
     # ------------------------------------------------------------
@@ -173,9 +181,8 @@ while cont:
 
     # ------------------------------------------------------------
     # Test for end conditions
-    end = False
     for e in end_conditions:
-        end = end & e.end(corpus_table, body, metadata)
+        end = e.end(corpus_table, body, metadata)
         log.info("End by condition '%s'? %s" % (e.name, end))
         if end:
             log.info("End condition reached.  Quitting...")

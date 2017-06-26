@@ -44,4 +44,8 @@ Available log levels are:
 
 
 ## Dependencies
-The tools here require a number of python libraries to run. We maintain a list at [dependencies.md](dependencies.md).
+The tools here require a number of python libraries to run. We maintain a list in the conventional [requirements.txt](requirements.txt).  To install these, run:
+
+    BUILD_LIB=1 pip3 install --user -r requirements.txt
+
+In addition to those requirements mentioned above, we also inlined the code to [url\_normalize](https://github.com/niksite/url-normalize) in the interests of clarity.

@@ -22,7 +22,7 @@ import Normalisation
 from filter         import DuplicateFilter, MinimumLengthFilter, MaximumLengthFilter, URLCountFilter, MetadataRegexpFilter
 from urlfilter      import HTTPURLFilter, PreciseDuplicateURLFilter
 from endcondition   import CorpusSizeEndCondition, RuntimeEndCondition, SampleEndCondition
-from fitness        import SimplicityURLRank, SampleURLRank
+from fitness        import SimplicityURLRank, SampleURLRank, HumanReadableURLRank
 
 # ----------------------------------------------------------------
 # Parse command-line arguments
@@ -55,16 +55,17 @@ corpus_table        = CorpusTable.CorpusTable(args.dbdir)                       
 spider              = HTTPClient.HTTPClient()                                       # Retrieval code
 url_normaliser      = Normalisation.URLNormaliser()                                 # URL normaliser
 feature_extractor   = Features.Features(url_normaliser, ['title', 'h1'])            # Feature extractor
-url_rank_function   = {'simple' : SimplicityURLRank.SimplicityURLRank(),            # URL fitness function
-                       'sample' : SampleURLRank.SampleURLRank()
-                      }
+# URL Fitness Function
+#url_rank_function   = SimplicityURLRank.SimplicityURLRank()                         # Prefer simple URLs
+#url_rank_function   = SampleURLRank.SampleURLRank()                                 # Sample code
+url_rank_function   = HumanReadableURLRank.HumanReadableURLRank()                   # Prefer human-readable URLs
 page_filters        = [                                                             # Filters for page rejection
-                       #FuzzyDuplicateFilter.FuzzyDuplicateFilter(corpus_table),
-                       DuplicateFilter.DuplicateFilter(corpus_table),
-                       MinimumLengthFilter.MinimumLengthFilter(100),
-                       MaximumLengthFilter.MaximumLengthFilter(800000),
-                       URLCountFilter.URLCountFilter(0, 1000),
-                       MetadataRegexpFilter.MetadataRegexpFilter('content_type', 'text\/(x?html|plain)'),
+                       # FuzzyDuplicateFilter.FuzzyDuplicateFilter(corpus_table),   # Fuzzy hash using ssdeep
+                       DuplicateFilter.DuplicateFilter(corpus_table),               # Perfect duplicate checker
+                       MinimumLengthFilter.MinimumLengthFilter(100),                # Min length
+                       MaximumLengthFilter.MaximumLengthFilter(800000),             # Max length
+                       URLCountFilter.URLCountFilter(0, 1000),                      # URL count
+                       MetadataRegexpFilter.MetadataRegexpFilter('content_type', 'text\/(x?html|plain)'),   # Content type
                       ]
 url_filters         = [                                                             # Filters for URL rejection
                        HTTPURLFilter.HTTPURLFilter(),
@@ -87,7 +88,7 @@ if args.list is not None:
             accepted = [f.accept(url) for f in url_filters]
             log.debug("%s out of %s URL filters accepted the URL" % (sum(accepted), len(url_filters)))
             if sum(accepted) == len(url_filters):
-                corpus_table.insert_url(url, url_rank_function['simple'].goodness(url))
+                corpus_table.insert_url(url, url_rank_function.goodness(url))
 
 # ----------------------------------------------------------------
 # Main crawling loop
@@ -168,7 +169,7 @@ while cont:
     log.info("Inserting %i URLs" % len(metadata['urls']))
     urls = metadata.pop('urls')
     for url in urls:
-        corpus_table.insert_url(url, url_rank_function['simple'].goodness(url), depth + 1)
+        corpus_table.insert_url(url, url_rank_function.goodness(url), depth + 1)
 
 
     # ------------------------------------------------------------

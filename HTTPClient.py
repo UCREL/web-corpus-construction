@@ -79,5 +79,8 @@ class HTTPClient:
         except socket.timeout:
             self._log.debug('Timeout error: URL: %s' % url)
             return None, None
+        except http.client.InvalidURL as error:
+            self._log.debug('Invalid Error: %s' % url)
+            return None, None
 
         return page, body

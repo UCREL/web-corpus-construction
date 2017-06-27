@@ -6,13 +6,6 @@ This repository contains code and documentation for supporting the web corpus co
 
 ### [Main presentation slides](https://docs.google.com/presentation/d/1hT0rGlYWcMuR_9qKYucGHn8mLuJPZLdSkLbqoCI9D38/edit?usp=sharing)
 
-## Setup guide
-1. Insert UCREL memory stick into the computer.
-2. Go to Removable Disk E in the file explorer.
-3. __Shift and right click__ on a blank part of the file explorer and from the menu click open command window here.
-4. Python is within the python folder under python.exe.
-
-
 ## Use
 Run `./spider.py -h` to see the help text:
 

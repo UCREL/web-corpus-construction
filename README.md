@@ -4,7 +4,7 @@ This repository contains code and documentation for supporting the web corpus co
 ## Slides that support the code
 ### [Introduction slides](slides/UCREL_NLP_S1_Web_Scraping_Intro.pdf)
 
-### [Main presentation slides](https://docs.google.com/presentation/d/1X_iXo3jNbvkPNE5PPlilGopsoylgd9xnZxOqk44JpsM/edit?usp=sharing)
+### [Main presentation slides](https://docs.google.com/presentation/d/1hT0rGlYWcMuR_9qKYucGHn8mLuJPZLdSkLbqoCI9D38/edit?usp=sharing)
 
 ## Setup guide
 1. Insert UCREL memory stick into the computer.
@@ -14,7 +14,7 @@ This repository contains code and documentation for supporting the web corpus co
 
 
 ## Use
-Run `..\..\python\python.exe spider.py -h` to see the help text:
+Run `./spider.py -h` to see the help text:
 
     usage: spider.py [-h] [-seeds LIST] [-db DBDIR] [-loglevel LOGLEVEL]
 
@@ -28,11 +28,11 @@ Run `..\..\python\python.exe spider.py -h` to see the help text:
 
 First run, you'll need to provide a one-url-per-line list using the `-seeds` argument:
 
-    python spider.py -seeds seed_urls/twitter.txt -db /tmp/test -loglevel DEBUG
+    ./spider.py -seeds seed_urls/twitter.txt -db output -loglevel DEBUG
 
 After that, you can resume a crawl by simply running it on the same database:
 
-    python spider.py -db /tmp/test -loglevel DEBUG
+    ./spider.py -db output -loglevel DEBUG
 
 Available log levels are:
 

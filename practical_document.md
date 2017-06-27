@@ -1,9 +1,10 @@
 #Ranking methods
-All ranking are subclasses of *URLRank*. We have given you one example
-*SimplicityURLRank* which ranks by the length of the URL the more parts
+All ranking are subclasses of [*URLRank*](fitness/URLRank.py). We have given you two examples:
+1. [*SimplicityURLRank*](fitness/SimplicityURLRank.py) which ranks by the length of the URL the more parts
 to the URL the worse the rank.
+2. [*HumanReadableURLRank*](fitness/HumanReadableURLRank.py) which ranks based on the number of letters divided by the length of the URL. The idea behind this is to rank URLs that have less special characters e.g. `!?()` higher than those that do.
 
-We would like you to create your own within *SampleURLRank* here are some
+We would like you to create your own within [*SampleURLRank*](fitness/SampleURLRank.py) here are some
 examples of how it could rank by:
 
 1. The depth of the URL.
@@ -29,7 +30,7 @@ Here are a few examples of what you could do:
 1. Base the end condition on your Ranking method e.g. Once there are no more
 URLs in the fringe that have a goodness value greater than X.
 2. The depth of the URLs e.g. once all URLs have a depth less than 3.
-3. Create a new Ranking method for your end condition. 
+3. Create a new Ranking method for your end condition.
 
 #Filter methods
 We currently have 5 filter methods of which they do the following:
